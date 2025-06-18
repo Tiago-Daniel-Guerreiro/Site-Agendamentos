@@ -1,0 +1,20 @@
+# Bloquear listagem de diretórios
+Options -Indexes
+
+# Proteger arquivos sensíveis (compatível com Apache 2.4)
+<Files ".env">
+    Require all denied
+</Files>
+
+RewriteEngine On
+
+# Se o arquivo ou diretório não existir, tenta adicionar .php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9_-]+)$ $1.php [L]
+<FIlesMatch "\.php$">
+    SetHandler application/x-httpd-php
+    ForceType application/x-httpd-php
+</FilesMatch>
+
+DirectoryIndex index.php

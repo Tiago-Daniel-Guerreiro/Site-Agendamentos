@@ -1,8 +1,9 @@
 # Site de Agendamentos em PHP
 
 ![Language](https://img.shields.io/badge/PHP-7%2B-blueviolet.svg)
-![Database](https://img.shields.io/badge/Database-MySQL-orange.svg)
+![Database](https://img.shields.io/badge/Database-MySQL-blue.svg)
 ![Status](https://img.shields.io/badge/Status-Projeto%20Escolar-brightgreen)
+![Deployment](https://img.shields.io/badge/Hosted%20On-infinityfree.com-orange.svg)
 
 Um projeto académico para criar um sistema de agendamentos funcional, desenvolvido com foco no **back-end em PHP** e na interação com uma **base de dados MySQL**. A aplicação permite que utilizadores submetam e visualizem agendamentos através de uma interface web simples.
 

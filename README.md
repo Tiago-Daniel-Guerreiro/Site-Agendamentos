@@ -8,7 +8,7 @@ Um projeto académico para criar um sistema de agendamentos funcional, desenvolv
 
 Uma versão de demonstração está disponível online em **[site-agendamentos.great-site.net](http://site-agendamentos.great-site.net)**.
 
-**Nota:** A aplicação está totalmente funcional para o utilizador comum. No entanto, por razões de segurança, a área de administração não está publicamente acessível nesta demonstração.
+**Aviso de Segurança:** Este é um projeto académico que não está a ser atualizado, pelo que podem existir vulnerabilidades. Ao testar a aplicação, **por favor, não utilize senhas reais ou que use noutros serviços**. Por razões de segurança, a área de administração também se encontra desativada nesta demonstração.
 
 ## 🚀 Tecnologias Utilizadas
 - **Back-end:** PHP

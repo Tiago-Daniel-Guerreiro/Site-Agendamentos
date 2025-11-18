@@ -1,4 +1,4 @@
-# Site de Agendamentos em PHP
+# Site de Agendamentos
 ![Language](https://img.shields.io/badge/PHP-7%2B-blueviolet.svg)
 ![Database](https://img.shields.io/badge/Database-MySQL-blue.svg)
 ![Status](https://img.shields.io/badge/Status-Projeto%20Escolar-brightgreen)
@@ -6,9 +6,9 @@
 
 Um projeto académico para criar um sistema de agendamentos funcional, desenvolvido com foco no **back-end em PHP** e na interação com uma **base de dados MySQL**. A aplicação permite que utilizadores submetam e visualizem agendamentos através de uma interface web simples.
 
-Uma versão de demonstração está disponível online em **[site-agendamentos.great-site.net](http://site-agendamentos.great-site.net)**.
+> **Aviso de Segurança:** Este é um projeto académico que não está a ser atualizado, pelo que podem existir vulnerabilidades. Ao testar a aplicação, **por favor, não utilize senhas reais ou que use noutros serviços**. Por razões de segurança, a área de administração também se encontra desativada na demonstração.
 
-**Aviso de Segurança:** Este é um projeto académico que não está a ser atualizado, pelo que podem existir vulnerabilidades. Ao testar a aplicação, **por favor, não utilize senhas reais ou que use noutros serviços**. Por razões de segurança, a área de administração também se encontra desativada nesta demonstração.
+Uma versão de demonstração está disponível online em **[site-agendamentos.great-site.net](http://site-agendamentos.great-site.net)**.
 
 ## 🚀 Tecnologias Utilizadas
 - **Back-end:** PHP
@@ -29,9 +29,9 @@ A gestão manual de agendamentos (por telefone, papel ou email) é ineficiente e
 
 ## ✔️ A Solução
 Uma aplicação web simples, mas funcional, composta por três componentes principais:
-1.  **Interface do Utilizador (Front-end):** Páginas dinâmicas onde o HTML é gerado diretamente pelos scripts PHP. Estas páginas incluem formulários para submeter dados e áreas para visualizar os agendamentos. O estilo é gerido com CSS básico.
-2.  **Lógica de Negócio (Back-end):** Scripts PHP que recebem os dados dos formulários, validam a informação e comunicam com a base de dados para inserir, atualizar ou consultar agendamentos.
-3.  **Persistência de Dados (Base de Dados):** Uma base de dados MySQL que armazena toda a informação de forma estruturada e persistente.
+-  **Interface do Utilizador (Front-end):** Páginas dinâmicas onde o HTML é gerado diretamente pelos scripts PHP. Estas páginas incluem formulários para submeter dados e áreas para visualizar os agendamentos. O estilo é gerido com CSS básico.
+-  **Lógica de Negócio (Back-end):** Scripts PHP que recebem os dados dos formulários, validam a informação e comunicam com a base de dados para inserir, atualizar ou consultar agendamentos.
+-  **Persistência de Dados (Base de Dados):** Uma base de dados MySQL que armazena toda a informação de forma estruturada e persistente.
 
 ## 👤 Meu Papel
 Este projeto foi desenvolvido em colaboração, com uma forte divisão de especialidades. O meu papel focou-se principalmente no design da arquitetura e na implementação da lógica PHP:
@@ -52,5 +52,5 @@ Embora tenha participado em várias fases, o meu colega teve um papel central na
 
 ## 🔮 Próximos Passos
 O projeto tem potencial para evoluir com as seguintes melhorias:
-- **Melhorar a Interface (UI/UX):** Modernizar o design para uma experiência mais intuitiva e agradável.
+- **Melhorar a Interface (UI/UX):** Modernizar o design para uma experiência mais responsiva e agradável.
 - **Aumentar a Segurança:** Implementar medidas de segurança mais robustas, como a proteção contra injeção de SQL (`SQL Injection`) e ataques XSS (`Cross-Site Scripting`).

@@ -1,11 +1,14 @@
 # Site de Agendamentos em PHP
-
 ![Language](https://img.shields.io/badge/PHP-7%2B-blueviolet.svg)
 ![Database](https://img.shields.io/badge/Database-MySQL-blue.svg)
 ![Status](https://img.shields.io/badge/Status-Projeto%20Escolar-brightgreen)
 ![Deployment](https://img.shields.io/badge/Hosted%20On-infinityfree.com-orange.svg)
 
 Um projeto académico para criar um sistema de agendamentos funcional, desenvolvido com foco no **back-end em PHP** e na interação com uma **base de dados MySQL**. A aplicação permite que utilizadores submetam e visualizem agendamentos através de uma interface web simples.
+
+Uma versão de demonstração está disponível online em **[site-agendamentos.great-site.net](http://site-agendamentos.great-site.net)**.
+
+**Nota:** A aplicação está totalmente funcional para o utilizador comum. No entanto, por razões de segurança, a área de administração não está publicamente acessível nesta demonstração.
 
 ## 🚀 Tecnologias Utilizadas
 - **Back-end:** PHP
@@ -29,9 +32,6 @@ Uma aplicação web simples, mas funcional, composta por três componentes princ
 1.  **Interface do Utilizador (Front-end):** Páginas dinâmicas onde o HTML é gerado diretamente pelos scripts PHP. Estas páginas incluem formulários para submeter dados e áreas para visualizar os agendamentos. O estilo é gerido com CSS básico.
 2.  **Lógica de Negócio (Back-end):** Scripts PHP que recebem os dados dos formulários, validam a informação e comunicam com a base de dados para inserir, atualizar ou consultar agendamentos.
 3.  **Persistência de Dados (Base de Dados):** Uma base de dados MySQL que armazena toda a informação de forma estruturada e persistente.
-
-Uma versão de demonstração está disponível online em **[site-agendamentos.great-site.net](http://site-agendamentos.great-site.net)**.
-**Nota:** A aplicação está totalmente funcional para o utilizador comum. No entanto, por razões de segurança, a área de administração não está publicamente acessível nesta demonstração.
 
 ## 👤 Meu Papel
 Este projeto foi desenvolvido em colaboração, com uma forte divisão de especialidades. O meu papel focou-se principalmente no design da arquitetura e na implementação da lógica PHP:

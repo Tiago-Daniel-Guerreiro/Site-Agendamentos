@@ -1,7 +1,16 @@
-<!DOCTYPE html>
 <?php
 require_once 'PHP.php';
-include 'header.php';
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema de Agendamentos</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<?php include 'header.php';
 
 if (Sessao::VerificaSessao())
 {
@@ -44,14 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
     $feedback = 'Email ou senha incorretos.';
 }
 ?>
-<link rel="stylesheet" href="assets/style.css">
 <div class="container" id="container-login">
   <h2>Login</h2>
   <form method="post">
     <input type="text" name="email" placeholder="Email ou usuário" required autofocus>
     <input type="password" name="senha" placeholder="Senha" required>
     <div class="manter-login-row">
-      <input style = "width: 0px;" type="checkbox" name="manter" id="manter" class="manter-login-checkbox">
+      <input type="checkbox" name="manter" id="manter" class="manter-login-checkbox">
       <label for="manter" class="manter-login-label">
         Manter login por 7 dias
       </label>
@@ -67,3 +75,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
   </form>
   <p>Não tem conta? <a href="registro">Registre-se</a></p>
 </div>
+</body>
+</html>

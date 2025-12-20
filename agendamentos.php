@@ -1,8 +1,18 @@
-<!DOCTYPE html>
 <?php
-
 require_once 'PHP.php';
-include 'header.php';
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Agendamentos - Sistema de Agendamentos</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+    <?php include 'header.php';
 
 if (Sessao::VerificaSessao() !== true)
 {
@@ -115,27 +125,23 @@ if (isset($_SERVER['REQUEST_METHOD']) === true && $_SERVER['REQUEST_METHOD'] ===
 
 ?>
 
-<link rel="stylesheet" href="assets/style.css">
-<div class="container">
-  <h2>Meus Agendamentos</h2>
-  <?php 
-  if ($resposta !== '' )
-    echo '<p>' . $resposta . '</p>';
-  ?>
-  <div class="table-responsive">
-    <table>
-      <thead>
-        <tr>
-          <th>Espaço</th>
-          <th>Data</th>
-          <th>Hora Início</th>
-          <th>Hora Fim</th>
-          <th>Motivo</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
+    <link rel="stylesheet" href="assets/style.css">
+    <div class="container">
+        <h2>Meus Agendamentos</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Espaço</th>
+                        <th>Data</th>
+                        <th>Hora Início</th>
+                        <th>Hora Fim</th>
+                        <th>Motivo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
 
         if (is_array($agendamentos) !== true || count($agendamentos) === 0)
             echo '<tr><td colspan="6">Nenhum agendamento encontrado.</td></tr>';
@@ -204,24 +210,30 @@ if (isset($_SERVER['REQUEST_METHOD']) === true && $_SERVER['REQUEST_METHOD'] ===
                 echo '<td>' . htmlspecialchars($horaInicio) . '</td>';
                 echo '<td>' . htmlspecialchars($horaFim) . '</td>';
                 echo '<td>' . $motivo . '</td>';
-                echo '<td>';
+                echo '<td style="display: flex; align-items: center;">';
 
                 if ($idAgStr !== '')
                     echo '<a class="btn-edit" href="EditarAgendamento?id=' . urlencode($idAgStr) . '">Editar</a>';
                 else
                     echo '<span style="color:gray">Editar</span>';
 
-                echo '<form method="post" style="display:inline" onsubmit="return confirm(\'Tem certeza que deseja cancelar este agendamento?\');">';
+                echo '<form method="post" style="box-shadow: none; padding: none;" onsubmit="return confirm(\'Tem certeza que deseja cancelar este agendamento?\');">';
                 echo '<input type="hidden" name="agendamento_id[]" value="' . htmlspecialchars($idAgStr) . '">';
-                echo '<button type="submit" name="cancelar_agendamento" class="btn-cancel" style="margin:3;">Cancelar</button>';
+                echo '<button type="submit" name="cancelar_agendamento" class="btn-cancel">Cancelar</button>';
+                echo '</form>';
                 echo '</td>';
                 echo '</tr>';
             }
         }
         ?>
-      </tbody>
-    </table>
-  </div>
-</div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <?php 
+if ($resposta !== '' )
+    echo '<div class="container feedback-container">' . $resposta . '</div>';
+?>
+</body>
 
-
+</html>

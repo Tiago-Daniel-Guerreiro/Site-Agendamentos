@@ -1,13 +1,14 @@
 <?php
-define('PROJECT_ROOT', __DIR__); 
-require_once PROJECT_ROOT . '/vendor/autoload.php'; 
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$dotenv = Dotenv\Dotenv::createImmutable(PROJECT_ROOT); 
-$dotenv->load();
+// Configurações da base de dados
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'DB_school');
+define('DB_TESTS_NAME', 'DB_schooltests');
+define('DB_USER', 'root');
+define('DB_PASS', '');
 
 $BaseDeDados = new BaseDeDados();
 $BaseDeDados->Conectar();
@@ -391,7 +392,7 @@ class Admin {
       return [];
     return BaseDeDados_Aceder_Com_Classes::ObterTodosOsAgendamentos($this); // Retorna todos os agendamentos
   }
-  public function VisualizarAgendamentos_ComFiltros(string $Espaco = null, int $Id = null, string $DataInicial = null, string $DataFinal = null):array {
+  public function VisualizarAgendamentos_ComFiltros(?string $Espaco = null, ?int $Id = null, ?string $DataInicial = null, ?string $DataFinal = null):array {
     if($this->VerificarUtilizador() == false)
       return []; // Retorna um array vazio se o usuário não for admin
 
@@ -510,13 +511,13 @@ class BaseDeDados {
 
     public function Conectar(bool $tests = false) {
       if($tests == false)
-        $DB = $_ENV['DB_NAME'];
+        $DB = DB_NAME;
       else
-        $DB = $_ENV['DB_TESTS_NAME'];
+        $DB = DB_TESTS_NAME;
 
-      $user = $_ENV['DB_USER'];
-      $passwd = $_ENV['DB_PASS'];
-      $host = $_ENV['DB_HOST'];
+      $user = DB_USER;
+      $passwd = DB_PASS;
+      $host = DB_HOST;
 
       $this->conexao = new mysqli($host, $user, $passwd, $DB);
 
@@ -577,8 +578,9 @@ class BaseDeDados {
         $stmt = $this->conexao->prepare("SELECT Senha FROM tbl_utilizadores WHERE Email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
+        $senhaHash = null;
         $stmt->bind_result($senhaHash);
-        if ($stmt->fetch()) {
+        if ($stmt->fetch() && $senhaHash !== null) {
             return password_verify($senha, $senhaHash); // Corrigido: compara senha informada com hash
         }
         // Se não encontrar o usuário, retorna false
@@ -632,6 +634,7 @@ class BaseDeDados {
                 return $utilizador; // Retorna o objeto Utilizador
             }
         }
+        return null; // Retorna null se não encontrar o usuário ou se falhar ao definir informações
     }
     public function ObterUtilizadorComUsername($username, $senha): ?Utilizador {
         if ($username === null || $senha === null) {
@@ -671,7 +674,7 @@ class BaseDeDados {
     }
     public function ObterTodosOsAgendamentos($utilizadorId): array {
       if(!$this->VerificarAdmin($utilizadorId))
-        return false;
+        return []; // Retorna array vazio em vez de false
 
       $stmt = $this->conexao->prepare("SELECT * FROM tbl_agendamentos");
       $stmt->execute();
@@ -744,6 +747,7 @@ class BaseDeDados {
         $stmt = $this->conexao->prepare("SELECT COUNT(*) FROM tbl_espacos WHERE LOWER(Nome) = LOWER(?)");
         $stmt->bind_param("s", $nome);
         $stmt->execute();
+        $count = 0;
         $stmt->bind_result($count);
         $stmt->fetch();
         $stmt->close();
@@ -759,6 +763,7 @@ class BaseDeDados {
         $stmt = $this->conexao->prepare("SELECT COUNT(*) FROM tbl_espacos WHERE LOWER(Nome) = LOWER(?) AND Id != ?");
         $stmt->bind_param("si", $novoNome, $id);
         $stmt->execute();
+        $count = 0;
         $stmt->bind_result($count);
         $stmt->fetch();
         $stmt->close();
@@ -787,6 +792,7 @@ class BaseDeDados {
         $stmt = $this->conexao->prepare("SELECT COUNT(*) FROM tbl_agendamentos WHERE Espaco_Id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
+        $count = 0;
         $stmt->bind_result($count);
         $stmt->fetch();
         $stmt->close();
@@ -807,7 +813,6 @@ class BaseDeDados {
         return null; // Retorna null se não encontrar o usuário
     }
     public function LimparBaseDeDados() {
-      // Corrigido: obter o nome do banco de dados atual
       $result = $this->conexao->query("SELECT DATABASE() as db");
       $dbName = $result->fetch_row()[0];   
       if ($dbName === 'schoolDBtests')  //verificar se a base de dados é a schoolDBtests
@@ -869,10 +874,7 @@ class BaseDeDados {
     }
     public static function EditarAgendamento($Id, $IdUtilizador, $novoMotivo, $novoEspacoId, $novaData, $novaHoraInicio, $novaHoraFim): bool {
         global $BaseDeDados;
-        // Busca o agendamento
-        if(BaseDeDados::ExisteConflito($novoEspacoId, $novaData, $novaHoraInicio, $novaHoraFim)) 
-          return false; // Retorna false se houver conflito com outro agendamento
-
+        
         $stmt = $BaseDeDados->getConexao()->prepare("SELECT Utilizador_Id FROM tbl_agendamentos WHERE Id = ?");
         $stmt->bind_param("i", $Id);
         $stmt->execute();
@@ -886,6 +888,24 @@ class BaseDeDados {
         if ($donoId != $IdUtilizador && !$BaseDeDados->VerificarAdmin($IdUtilizador)) {
             return false;
         }
+        
+        // Verifica conflito, excluindo o agendamento atual
+        $stmtConflito = $BaseDeDados->getConexao()->prepare("
+            SELECT COUNT(*) as total FROM tbl_agendamentos 
+            WHERE Espaco_Id = ? 
+            AND Data = ? 
+            AND Id != ?
+            AND ((Hora_Inicio < ? AND Hora_Fim > ?) OR (Hora_Inicio >= ? AND Hora_Fim <= ?))
+        ");
+        $stmtConflito->bind_param("isisiss", $novoEspacoId, $novaData, $Id, $novaHoraFim, $novaHoraInicio, $novaHoraInicio, $novaHoraFim);
+        $stmtConflito->execute();
+        $resultadoConflito = $stmtConflito->get_result();
+        $rowConflito = $resultadoConflito->fetch_assoc();
+        
+        if ($rowConflito['total'] > 0) {
+            return false; // Há conflito com outro agendamento
+        }
+        
         // Atualiza o agendamento
         $stmt = $BaseDeDados->getConexao()->prepare("UPDATE tbl_agendamentos SET Motivo = ?, Espaco_Id = ?, Data = ?, Hora_Inicio = ?, Hora_Fim = ? WHERE Id = ?");
         $stmt->bind_param("sisssi", $novoMotivo, $novoEspacoId, $novaData, $novaHoraInicio, $novaHoraFim, $Id);

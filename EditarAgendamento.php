@@ -1,6 +1,18 @@
-<!DOCTYPE html>
 <?php
 require_once 'PHP.php';
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Agendamento - Sistema de Agendamentos</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+    <?php
 include 'header.php';
 
 $msg = '';
@@ -45,14 +57,29 @@ if ($msg === '')
             {
                 $idAg = null;
 
-                if (is_array($ag) === true && array_key_exists('Id', $ag) === true)
+                // Se for array com chave 'agendamento' (novo formato)
+                if (is_array($ag) === true && array_key_exists('agendamento', $ag) === true)
+                {
+                    if (array_key_exists('Id', $ag) === true)
+                        $idAg = $ag['Id'];
+                    
+                    if ($idAg !== null && $idAg == $id)
+                        return $ag; // Retorna o array inteiro com 'agendamento' e 'Id'
+                }
+                // Se for array simples (formato antigo)
+                else if (is_array($ag) === true && array_key_exists('Id', $ag) === true)
+                {
                     $idAg = $ag['Id'];
-
-                if (is_object($ag) === true)
+                    if ($idAg !== null && $idAg == $id)
+                        return $ag;
+                }
+                // Se for objeto
+                else if (is_object($ag) === true)
+                {
                     $idAg = BaseDeDados_Aceder_Com_Classes::ObterIdDeAgendamento($ag);
-
-                if ($idAg !== null && $idAg == $id)
-                    return $ag;
+                    if ($idAg !== null && $idAg == $id)
+                        return $ag;
+                }
             }
 
             return null;
@@ -77,11 +104,22 @@ if ($msg === '')
         {
             $agendamentoUid = null;
 
-            if (is_array($agendamento) === true && array_key_exists('Utilizador_Id', $agendamento) === true)
+            // Se é array com chave 'agendamento' (novo formato)
+            if (is_array($agendamento) === true && array_key_exists('agendamento', $agendamento) === true)
+            {
+                if (array_key_exists('Utilizador_Id', $agendamento) === true)
+                    $agendamentoUid = $agendamento['Utilizador_Id'];
+            }
+            // Se é array simples (formato antigo)
+            else if (is_array($agendamento) === true && array_key_exists('Utilizador_Id', $agendamento) === true)
+            {
                 $agendamentoUid = $agendamento['Utilizador_Id'];
-
-            if (is_object($agendamento) === true && property_exists($agendamento, 'Utilizador_Id'))
+            }
+            // Se é objeto
+            else if (is_object($agendamento) === true && property_exists($agendamento, 'Utilizador_Id'))
+            {
                 $agendamentoUid = $agendamento->Utilizador_Id;
+            }
 
             if ($agendamentoUid === null)
                 $msg = 'Erro ao identificar o dono do agendamento.';
@@ -94,6 +132,7 @@ if ($msg === '')
 
 if ($msg === '' && array_key_exists('REQUEST_METHOD', $_SERVER) === true && $_SERVER['REQUEST_METHOD'] === 'POST')
 {
+    $id = intval($_GET['id']);
     $motivo = '';
     if (array_key_exists('motivo', $_POST) === true)
         $motivo = $_POST['motivo'];
@@ -123,41 +162,86 @@ if ($msg === '' && array_key_exists('REQUEST_METHOD', $_SERVER) === true && $_SE
     $msg = 'Erro ao editar agendamento.';
 }
 
-if ($msg === '' && is_object($agendamento) === true)
+if ($msg === '' && (is_object($agendamento) === true || is_array($agendamento) === true))
 {
-    $agendamento = array();
+    // Se $agendamento é um array com chave 'agendamento', extrair o objeto
+    if (is_array($agendamento) === true && array_key_exists('agendamento', $agendamento) === true)
+    {
+        $temp = $agendamento['agendamento'];
+        $agendamento = array();
 
-    if (property_exists($agendamento, 'Motivo') === true && $agendamento->Motivo !== null)
-        $agendamento['Motivo'] = $agendamento->Motivo;
-    else
-        $agendamento['Motivo'] = '';
+        if (is_object($temp) === true)
+        {
+            if (property_exists($temp, 'Motivo') === true && $temp->Motivo !== null)
+                $agendamento['Motivo'] = $temp->Motivo;
+            else
+                $agendamento['Motivo'] = '';
 
-    if (property_exists($agendamento, 'Espaco_Id') === true && $agendamento->Espaco_Id !== null)
-        $agendamento['Espaco_Id'] = $agendamento->Espaco_Id;
-    else
-        $agendamento['Espaco_Id'] = '';
+            if (property_exists($temp, 'Espaco_Id') === true && $temp->Espaco_Id !== null)
+                $agendamento['Espaco_Id'] = $temp->Espaco_Id;
+            else
+                $agendamento['Espaco_Id'] = '';
 
-    if (property_exists($agendamento, 'Data') === true && $agendamento->Data !== null)
-        $agendamento['Data'] = $agendamento->Data;
-    else
-        $agendamento['Data'] = '';
+            if (property_exists($temp, 'Data') === true && $temp->Data !== null)
+                $agendamento['Data'] = $temp->Data;
+            else
+                $agendamento['Data'] = '';
 
-    if (property_exists($agendamento, 'Hora_Inicio') === true && $agendamento->Hora_Inicio !== null)
-        $agendamento['Hora_Inicio'] = $agendamento->Hora_Inicio;
-    else
-        $agendamento['Hora_Inicio'] = '';
+            if (property_exists($temp, 'Hora_Inicio') === true && $temp->Hora_Inicio !== null)
+                $agendamento['Hora_Inicio'] = $temp->Hora_Inicio;
+            else
+                $agendamento['Hora_Inicio'] = '';
 
-    if (property_exists($agendamento, 'Hora_Fim') === true && $agendamento->Hora_Fim !== null)
-        $agendamento['Hora_Fim'] = $agendamento->Hora_Fim;
-    else
-        $agendamento['Hora_Fim'] = '';
+            if (property_exists($temp, 'Hora_Fim') === true && $temp->Hora_Fim !== null)
+                $agendamento['Hora_Fim'] = $temp->Hora_Fim;
+            else
+                $agendamento['Hora_Fim'] = '';
 
-    if (property_exists($agendamento, 'Utilizador_Id') === true && $agendamento->Utilizador_Id !== null)
-        $agendamento['Utilizador_Id'] = $agendamento->Utilizador_Id;
-    else
-        $agendamento['Utilizador_Id'] = '';
+            if (property_exists($temp, 'Utilizador_Id') === true && $temp->Utilizador_Id !== null)
+                $agendamento['Utilizador_Id'] = $temp->Utilizador_Id;
+            else
+                $agendamento['Utilizador_Id'] = '';
 
-    $agendamento['Id'] = BaseDeDados_Aceder_Com_Classes::ObterIdDeAgendamento($agendamento);
+            $agendamento['Id'] = BaseDeDados_Aceder_Com_Classes::ObterIdDeAgendamento($temp);
+        }
+    }
+    else if (is_object($agendamento) === true)
+    {
+        $temp = $agendamento;
+        $agendamento = array();
+
+        if (property_exists($temp, 'Motivo') === true && $temp->Motivo !== null)
+            $agendamento['Motivo'] = $temp->Motivo;
+        else
+            $agendamento['Motivo'] = '';
+
+        if (property_exists($temp, 'Espaco_Id') === true && $temp->Espaco_Id !== null)
+            $agendamento['Espaco_Id'] = $temp->Espaco_Id;
+        else
+            $agendamento['Espaco_Id'] = '';
+
+        if (property_exists($temp, 'Data') === true && $temp->Data !== null)
+            $agendamento['Data'] = $temp->Data;
+        else
+            $agendamento['Data'] = '';
+
+        if (property_exists($temp, 'Hora_Inicio') === true && $temp->Hora_Inicio !== null)
+            $agendamento['Hora_Inicio'] = $temp->Hora_Inicio;
+        else
+            $agendamento['Hora_Inicio'] = '';
+
+        if (property_exists($temp, 'Hora_Fim') === true && $temp->Hora_Fim !== null)
+            $agendamento['Hora_Fim'] = $temp->Hora_Fim;
+        else
+            $agendamento['Hora_Fim'] = '';
+
+        if (property_exists($temp, 'Utilizador_Id') === true && $temp->Utilizador_Id !== null)
+            $agendamento['Utilizador_Id'] = $temp->Utilizador_Id;
+        else
+            $agendamento['Utilizador_Id'] = '';
+
+        $agendamento['Id'] = BaseDeDados_Aceder_Com_Classes::ObterIdDeAgendamento($temp);
+    }
 }
 
 if (
@@ -224,25 +308,19 @@ if ($msg === '')
     }
 }
 ?>
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Editar Agendamento</title>
-</head>
-<body>
-    <h2>Editar Agendamento</h2>
-    <?php
+    <div class="container" id="container-editar-agendamento">
+        <h2>Editar Agendamento</h2>
+        <?php
     if ($msg !== '')
-        echo '<p class="mensagem-erro" style="color:red">' . htmlspecialchars($msg) . '</p>';
+        echo '<div class="mensagem-erro">' . htmlspecialchars($msg) . '</div>';
 
     if ($msg === '')
     {
     ?>
-    <form method="post">
-        <label>Espaço:<br>
-            <select name="espaco" required>
-                <?php
+        <form method="post" class="form-agendamento">
+            <label>Espaço:
+                <select name="espaco" required>
+                    <?php
                 foreach ($espacos as $espaco)
                 {
                     $espacoId = '';
@@ -269,17 +347,41 @@ if ($msg === '')
                     echo '<option value="' . htmlspecialchars($espacoId) . '" ' . $selected . '>' . htmlspecialchars($espacoNome) . '</option>';
                 }
                 ?>
-            </select>
-        </label><br>
-        <label>Data:<br><input type="date" name="data" value="<?php echo htmlspecialchars($agendamento['Data']); ?>" required></label><br>
-        <label>Hora Início:<br><input type="time" name="hora_inicio" value="<?php echo htmlspecialchars($agendamento['Hora_Inicio']); ?>" required></label><br>
-        <label>Hora Fim:<br><input type="time" name="hora_fim" value="<?php echo htmlspecialchars($agendamento['Hora_Fim']); ?>" required></label><br>
-        <label>Motivo:<br><input type="text" name="motivo" value="<?php echo htmlspecialchars($agendamento['Motivo']); ?>"></label><br>
-        <button type="submit">Salvar</button>
-        <a href="agendamentos">Cancelar</a>
-    </form>
-    <?php
+                </select>
+            </label>
+
+            <label>Data:
+                <input type="date" name="data" value="<?php echo htmlspecialchars($agendamento['Data']); ?>" required>
+            </label>
+
+            <div class="flex-row">
+                <label style="flex: 1;">Hora Início:
+                    <input type="time" name="hora_inicio"
+                        value="<?php echo htmlspecialchars($agendamento['Hora_Inicio']); ?>" required>
+                </label>
+
+                <span>até</span>
+
+                <label style="flex: 1;">Hora Fim:
+                    <input type="time" name="hora_fim" value="<?php echo htmlspecialchars($agendamento['Hora_Fim']); ?>"
+                        required>
+                </label>
+            </div>
+
+            <label>Motivo (opcional):
+                <textarea name="motivo" rows="3"><?php echo htmlspecialchars($agendamento['Motivo']); ?></textarea>
+            </label>
+
+            <div class="flex-row" style="justify-content: flex-end; margin-top: 16px;">
+                <a href="agendamentos" class="btn-cancel">Cancelar</a>
+                <button type="submit" class="btn-edit">Salvar Alterações</button>
+            </div>
+        </form>
+        <?php
     }
     ?>
+    </div>
+    </div>
 </body>
+
 </html>

@@ -1,6 +1,5 @@
-<link rel="stylesheet" href="assets/style.css">
 <?php
-require_once 'PHP.php';
+// PHP.php já foi incluído antes no arquivo principal
 
 $user = null;
 

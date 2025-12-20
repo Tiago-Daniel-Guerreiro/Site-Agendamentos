@@ -1,10 +1,16 @@
-<!DOCTYPE html>
-    <head>
-        <link rel="stylesheet" href="assets/style.css">
-    </head>
-<body>
 <?php
 require_once 'PHP.php';
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar Agendamento - Sistema de Agendamentos</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<?php
 include 'header.php';
 
 if (!Sessao::VerificaSessao())
@@ -74,8 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
 <div class="container" id="container-marcar">
   <h2>Marcar Agendamento</h2>
   <form method="post" class="form-agendamento">
-    <select name="espaco" required>
-      <option value="">Selecione o espaço</option>
+    <label>Espaço:
+      <select name="espaco" required>
+        <option value="">Selecione o espaço</option>
       <?php
 
       foreach ($espacos as $esp)
@@ -84,21 +91,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
       }
 
       ?>
-    </select>
-    <input type="date" name="data" required>
+      </select>
+    </label>
+    <label>Data:
+      <input type="date" name="data" required>
+    </label>
     <div class="flex-row">
-      <input type="time" name="hora_inicio" required>
+      <input type="time" name="hora_inicio" required style="flex: 1; min-width: 120px;">
       <span>até</span>
-      <input type="time" name="hora_fim" required>
+      <input type="time" name="hora_fim" required style="flex: 1; min-width: 120px;">
     </div>
     <textarea name="motivo" placeholder="Motivo (opcional)" rows="2"></textarea>
     <button type="submit">Agendar</button>
-    <?php
-
-    if ($feedback !== '')
-        echo '<div class="feedback">'.$feedback.'</div>';
-    
-    ?>
   </form>
 </div>
+<?php
+if ($feedback !== '')
+    echo '<div class="container feedback-container">'.$feedback.'</div>';
+?>
 </body>
+</html>

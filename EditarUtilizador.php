@@ -1,7 +1,16 @@
-<!DOCTYPE html>
 <?php
 require_once 'PHP.php';
-include 'header.php';
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Utilizador - Sistema de Agendamentos</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<?php include 'header.php';
 
 if (Sessao::VerificaSessao() !== true)
 {
@@ -126,10 +135,11 @@ if (array_key_exists('REQUEST_METHOD', $_SERVER) === true && $_SERVER['REQUEST_M
     </script>
 </head>
 <body>
+    <div class="container">
     <h2>Editar Utilizador</h2>
     <?php
     if ($msg !== '')
-        echo '<p style="color:red">' . $msg . '</p>';
+        echo '<div class="feedback mensagem-erro">' . $msg . '</div>';
     ?>
     <form method="post" onsubmit="return confirmarAdminChange(this);">
         <label>Nome:<br><input type="text" name="nome" value="<?php echo htmlspecialchars($user['Nome']); ?>" required></label><br>
@@ -137,15 +147,25 @@ if (array_key_exists('REQUEST_METHOD', $_SERVER) === true && $_SERVER['REQUEST_M
         <?php if ($isAdmin === true)
         {
         ?>
-        <label>Admin:<br>
-            <input style="width: 20px" type="radio" name="admin" value="1" <?php if ($adminAtual === 1) echo 'checked'; ?>> Sim
-            <input style="width: 20px" type="radio" name="admin" value="0" <?php if ($adminAtual === 0) echo 'checked'; ?>> Não
-        </label><br>
+        <label>Admin:</label>
+        <div class="radio-group">
+            <label class="radio-label">
+                <input type="radio" name="admin" value="1" <?php if ($adminAtual === 1) echo 'checked'; ?>>
+                <span>Sim</span>
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="admin" value="0" <?php if ($adminAtual === 0) echo 'checked'; ?>>
+                <span>Não</span>
+            </label>
+        </div>
         <?php
         }
         ?>
-        <button type="submit">Salvar</button>
-        <a href="agendamentos">Cancelar</a>
+        <div class="form-actions">
+            <button type="submit" class="btn-salvar">Salvar</button>
+            <a href="agendamentos" class="btn-cancelar-link">Cancelar</a>
+        </div>
     </form>
+    </div>
 </body>
 </html>

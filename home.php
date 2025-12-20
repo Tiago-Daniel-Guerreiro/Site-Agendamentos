@@ -1,7 +1,16 @@
-<!DOCTYPE html>
 <?php
 require_once 'PHP.php';
-include 'header.php';
+?>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Semanal - Sistema de Agendamentos</title>
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<?php include 'header.php';
 
 if (!Sessao::VerificaSessao())
 {
@@ -203,7 +212,6 @@ foreach ($espacos as $esp)
 }
 
 ?>
-<link rel="stylesheet" href="assets/style.css">
 <div class="container" id="container-home">
   <h2>Bem-vindo, <?php echo htmlspecialchars($user->Nome); ?>!</h2>
   <form method="post" class="form-semana">
@@ -219,3 +227,5 @@ foreach ($espacos as $esp)
   </form>
   <?php echo $tabela; ?>
 </div>
+</body>
+</html>

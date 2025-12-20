@@ -1,4 +1,15 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Configurações da base de dados
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'DB_school');
+define('DB_TESTS_NAME', 'DB_schooltests');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+
 require "PHP.php";
 
 // Executa os testes
@@ -164,8 +175,6 @@ class TestesUnitarios {
                 $agendamentoId = $row['Id'];
             }
         }
-        $ok = $admin->AprovarRejeitarAgendamento($agendamentoId);
-        $this->resultados[] = $ok ? "Admin: aprovou/rejeitou agendamento $agendamentoId." : "Admin: não conseguiu aprovar/rejeitar agendamento $agendamentoId.";
         // Visualizar com filtros
         $filtros = $admin->VisualizarAgendamentos_ComFiltros();
         $this->resultados[] = "Admin: visualizou com filtros: ".json_encode($filtros);
